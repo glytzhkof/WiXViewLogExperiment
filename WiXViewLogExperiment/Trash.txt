@@ -1,0 +1,207 @@
+﻿    <!-- Declare property with value -->
+    <Property Id="MYPROPERTY" Hidden="yes" Secure="yes">Send this text to deferred mode</Property>
+
+	
+    <!-- Type 51 CA: Send value of MYPROPERTY to the deferred mode CA named MyAction -->
+    <CustomAction Id="SetProperty" Return="check" Property="ReadProperyDeferred" Value="[MYPROPERTY]" />
+
+	
+    <InstallExecuteSequence>
+      <Custom Action='SetProperty' Before='InstallInitialize'></Custom>
+      <Custom Action='ReadProperyDeferred' Before='InstallFinalize'></Custom>
+      <!--<Custom Action="CA_01_Verify" Before="CostInitialize"></Custom>-->
+    </InstallExecuteSequence>
+	
+        [CustomAction]
+        public static ActionResult OpenLog(Session session)
+        {
+            //MessageBox.Show("Property MsiLogFileLocation: " + session["MsiLogFileLocation"]);
+
+            Process.Start("notepad.exe", session["MsiLogFileLocation"]);
+
+            return ActionResult.Success;
+        }
+
+		        [CustomAction]
+        public static ActionResult TestCustomAction(Session session)
+        {
+            // System.Diagnostics.Debugger.Launch();
+            session.Log("Begin TestCustomAction");
+
+            string data = session["CustomActionData"];
+
+            // MessageBox.Show(data);
+
+            return ActionResult.Success;
+        }
+
+		
+    <CustomAction Id="CA_01_Verify"
+                BinaryKey="CustomActions"
+                DllEntry="VerifyLog"
+                Execute="immediate"
+                Return="check" />
+
+
+<CustomAction Id="ReadProperyDeferred" HideTarget="yes" BinaryKey="CustomActions" Execute="deferred" DllEntry="TestCustomAction" />
+
+
+
+        <Control Id="TestCA" Type="PushButton" X="186" Y="143" Width="58" Height="14" Default="yes" Text="Test CA">
+
+          <Publish Event="DoAction" Value="CA_01_Verify">1</Publish>
+          <!--<Publish Event="Reset" Value="0">1</Publish>-->
+
+        </Control>
+
+		
+        private static string FormatAsRTF(string DirtyText)
+        {
+            System.Windows.Forms.RichTextBox rtf = new System.Windows.Forms.RichTextBox();
+            rtf.Text = DirtyText;
+            return rtf.Rtf;
+        }
+
+
+        [CustomAction]
+        public static ActionResult VerifyLog(Session session)
+        {
+            // MessageBox.Show("Property TEST: " + session["TEST"]);
+
+            MessageBox.Show("Property MsiLogFileLocation: " + session["MsiLogFileLocation"]);
+
+            // var logcontent = System.IO.File.ReadAllText(session["MsiLogFileLocation"]);
+            var content = "";
+            using (var fileStream = new FileStream(session["MsiLogFileLocation"], FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (var textReader = new StreamReader(fileStream))
+            {
+                content = textReader.ReadToEnd();
+            }
+
+            Process.Start("notepad.exe", session["MsiLogFileLocation"]);
+
+            //MessageBox.Show(content);
+
+            // System.Diagnostics.Debugger.Launch();
+
+            // MessageBox.Show("Debug");
+
+            //MessageBox.Show(session["MYPROPERTY"]);
+            //MessageBox.Show(session["ProductCode"]);
+
+            // MessageBox.Show(data);
+            // string data = session["MYPROPERTY"];
+
+
+            // var sRtfText = @"{\rtf1\ansi\deff0{\colortbl;\red0\green0\blue0;\red255\green0\blue0;}THIS IS NOT DEFAULT TEXT}";
+
+            // var sRtfText = content;
+            //var sRtfText = @"{\rtf1\ansi\deff0{\colortbl;\red0\green0\blue0;\red255\green0\blue0;}This is some test log content}";
+
+            //var sRtfText = @"{\rtf1\ansi\deff0{\colortbl;\red0\green0\blue0;\red255\green0\blue0;}" + content + "}";
+
+            var sRtfText = FormatAsRTF(content);
+
+            //var view = session.D>atabase.OpenView("SELECT * FROM Control WHERE Dialog_ = 'MyEndDlg' AND Control = 'Verification'");
+            //var view = session.Database.OpenView("SELECT * FROM Control WHERE Dialog_ = 'EndDlg' AND Control = 'Verification'");
+            var view = session.Database.OpenView("SELECT * FROM Control WHERE Dialog_ = 'LogDlg' AND Control = 'Verification'");
+
+            view.Execute();
+            var record = view.Fetch();
+            view.Delete(record);
+            record.SetString("Text", sRtfText);
+            view.InsertTemporary(record); // also tried original post's view.Modify(ViewModifyMode.InsertTemporary, record); as well
+
+            // MessageBox.Show("Product Code: " +  session["ProductCode"]);
+
+            return ActionResult.Success;
+        }
+
+        [CustomAction]
+        public static ActionResult VerifyLog2(Session session)
+        {
+            // MessageBox.Show("Property TEST: " + session["TEST"]);
+
+            MessageBox.Show("Property MsiLogFileLocation: " + session["MsiLogFileLocation"]);
+
+            // var logcontent = System.IO.File.ReadAllText(session["MsiLogFileLocation"]);
+            var content = "";
+            using (var fileStream = new FileStream(session["MsiLogFileLocation"], FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (var textReader = new StreamReader(fileStream))
+            {
+                content = textReader.ReadToEnd();
+            }
+
+            Process.Start("notepad.exe", session["MsiLogFileLocation"]);
+
+            //MessageBox.Show(content);
+
+            // System.Diagnostics.Debugger.Launch();
+
+            // MessageBox.Show("Debug");
+
+            //MessageBox.Show(session["MYPROPERTY"]);
+            //MessageBox.Show(session["ProductCode"]);
+
+            // MessageBox.Show(data);
+            // string data = session["MYPROPERTY"];
+
+
+            // var sRtfText = @"{\rtf1\ansi\deff0{\colortbl;\red0\green0\blue0;\red255\green0\blue0;}THIS IS NOT DEFAULT TEXT}";
+
+            // var sRtfText = content;
+            //var sRtfText = @"{\rtf1\ansi\deff0{\colortbl;\red0\green0\blue0;\red255\green0\blue0;}This is some test log content}";
+
+            //var sRtfText = @"{\rtf1\ansi\deff0{\colortbl;\red0\green0\blue0;\red255\green0\blue0;}" + content + "}";
+
+            var sRtfText = FormatAsRTF(content);
+
+            //var view = session.D>atabase.OpenView("SELECT * FROM Control WHERE Dialog_ = 'MyEndDlg' AND Control = 'Verification'");
+            //var view = session.Database.OpenView("SELECT * FROM Control WHERE Dialog_ = 'EndDlg' AND Control = 'Verification'");
+            var view = session.Database.OpenView("SELECT * FROM Control WHERE Dialog_ = 'LogDlg' AND Control = 'Verification'");
+
+            view.Execute();
+            var record = view.Fetch();
+            view.Delete(record);
+            record.SetString("Text", sRtfText);
+            view.InsertTemporary(record); // also tried original post's view.Modify(ViewModifyMode.InsertTemporary, record); as well
+
+            // MessageBox.Show("Product Code: " +  session["ProductCode"]);
+
+            return ActionResult.Success;
+        }
+
+
+
+
+
+		
+<!--<Control Id="Verification" Type="ScrollableText" X="0" Y="0" Width="110" Height="180" Sunken="yes" TabSkip="no" Text="{\rtf1\ansi\deff0{\colortbl;\red0\green0\blue0;\red255\green0\blue0;}default text\line}"/>-->
+
+<!--<Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="Cancel">
+          <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+        </Control>-->
+
+<!--<Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="Next" />
+            <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="Back" />-->
+
+<!--<Control Id="OptionalText" Type="Text" X="135" Y="110" Width="220" Height="80" Transparent="yes" NoPrefix="yes" Hidden="yes" Text="[WIXUI_EXITDIALOGOPTIONALTEXT]">
+          <Condition Action="show">WIXUI_EXITDIALOGOPTIONALTEXT AND NOT Installed</Condition>
+        </Control>
+        <Control Id="OptionalCheckBox" Type="CheckBox" X="135" Y="190" Width="220" Height="40" Hidden="yes" Property="WIXUI_EXITDIALOGOPTIONALCHECKBOX" CheckBoxValue="1" Text="[WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT]">
+          <Condition Action="show">WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT AND NOT Installed</Condition>
+        </Control>-->
+
+<!--<Control Id="OpenLogFile" Type="CheckBox" X="20" Y="207" Width="330" Height="18" CheckBoxValue="1" Property="PropertyOpenLogFile" Text="Open Log file">
+          -->
+<!--<Condition Action="show">MsiLogFileLocation</Condition>-->
+<!--
+          <Condition Action="hide">NOT MsiLogFileLocation</Condition>
+        </Control>-->
+
+<!--<Control Id="Verification" Type="ScrollableText" X="0" Y="0" Width="110" Height="180" Sunken="yes" TabSkip="no" Text="{\rtf1\ansi\deff0{\colortbl;\red0\green0\blue0;\red255\green0\blue0;}default text\line}"/>-->
+
+<!--<Control Id="DoSpawn" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="Cancel">
+          <Publish Event="SpawnDialog" Value="LogDlg">1</Publish>
+        </Control>-->
+

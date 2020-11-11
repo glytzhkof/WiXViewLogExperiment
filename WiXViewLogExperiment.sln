@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.1267
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "WiXViewLogExperiment", "WiXViewLogExperiment\WiXViewLogExperiment.wixproj", "{23E49CB1-1E3B-46D5-B177-CF60669B2DA0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WiXCustomActions", "CustomActions\WiXCustomActions.csproj", "{FB60BAEB-5EC4-4A4C-A68A-75813339B428}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{23E49CB1-1E3B-46D5-B177-CF60669B2DA0}.Debug|x86.ActiveCfg = Debug|x86
+		{23E49CB1-1E3B-46D5-B177-CF60669B2DA0}.Debug|x86.Build.0 = Debug|x86
+		{23E49CB1-1E3B-46D5-B177-CF60669B2DA0}.Release|x86.ActiveCfg = Release|x86
+		{23E49CB1-1E3B-46D5-B177-CF60669B2DA0}.Release|x86.Build.0 = Release|x86
+		{FB60BAEB-5EC4-4A4C-A68A-75813339B428}.Debug|x86.ActiveCfg = Debug|x86
+		{FB60BAEB-5EC4-4A4C-A68A-75813339B428}.Debug|x86.Build.0 = Debug|x86
+		{FB60BAEB-5EC4-4A4C-A68A-75813339B428}.Release|x86.ActiveCfg = Release|x86
+		{FB60BAEB-5EC4-4A4C-A68A-75813339B428}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {55618833-E40B-49C4-96F1-D2789AA4F751}
+	EndGlobalSection
+EndGlobal
