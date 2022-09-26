@@ -34,9 +34,6 @@
     </WixExtension>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Trash.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\CustomActions\WiXCustomActions.csproj">
       <Name>WiXCustomActions</Name>
       <Project>{fb60baeb-5ec4-4a4c-a68a-75813339b428}</Project>
